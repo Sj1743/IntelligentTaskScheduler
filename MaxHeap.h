@@ -6,7 +6,7 @@ using namespace std;
 
 class MaxHeap {
 private:
-    Task* heap; // Changed from Task heap[20000]
+    Task* heap;
     int heapSize;
     bool enableLogging;
     
@@ -16,7 +16,7 @@ private:
 
 public:
     MaxHeap();
-    ~MaxHeap(); // Added destructor
+    ~MaxHeap();
     void insert(Task task);
     Task extractMax();
     Task peekMax() const;

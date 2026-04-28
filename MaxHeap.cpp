@@ -1,13 +1,13 @@
 #include "MaxHeap.h"
 
 MaxHeap::MaxHeap() {
-    heap = new Task[20000]; // Safely allocated on the heap
+    heap = new Task[20000]; 
     heapSize = 0;
     enableLogging = true;
 }
 
 MaxHeap::~MaxHeap() {
-    delete[] heap; // Prevent memory leaks
+    delete[] heap;
 }
 
 void MaxHeap::swapTasks(int i, int j) {

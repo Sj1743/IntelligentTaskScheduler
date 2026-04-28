@@ -18,7 +18,6 @@ void TwoThreeTree::destroyTree(Node23* node) {
     }
 }
 
-// Manual swap sorting for 2-3 tree local arrays
 void TwoThreeTree::sortKeys(Task keys[], int count) {
     if (count == 2 && keys[0].taskID > keys[1].taskID) {
         Task temp = keys[0]; keys[0] = keys[1]; keys[1] = temp;
