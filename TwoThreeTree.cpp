@@ -36,28 +36,37 @@ TwoThreeTree::SplitResult TwoThreeTree::insertHelper(Node23* node, Task task) {
             node->keyCount++;
             sortKeys(node->keys, node->keyCount);
         } else {
-            Task tempKeys[3];
-            tempKeys[0] = node->keys[0];
-            tempKeys[1] = node->keys[1];
-            tempKeys[2] = task;
-            sortKeys(tempKeys, 3);
+            Task smallest, middle, largest;
+            if (task.taskID < node->keys[0].taskID) {
+                smallest = task;
+                middle = node->keys[0];
+                largest = node->keys[1];
+            } else if (task.taskID < node->keys[1].taskID) {
+                smallest = node->keys[0];
+                middle = task;
+                largest = node->keys[1];
+            } else {
+                smallest = node->keys[0];
+                middle = node->keys[1];
+                largest = task;
+            }
             
             if (enableLogging) {
                 int a = (node->keys[0].taskID < node->keys[1].taskID) ? node->keys[0].taskID : node->keys[1].taskID;
                 int b = (node->keys[0].taskID > node->keys[1].taskID) ? node->keys[0].taskID : node->keys[1].taskID;
                 cout << "23T SPLIT: Split node containing keys [" << a << "," << b << "]\n";
-                cout << "23T SPLIT: Promote key " << tempKeys[1].taskID << "\n";
+                cout << "23T SPLIT: Promote key " << middle.taskID << "\n";
             }
             
-            node->keys[0] = tempKeys[0];
+            node->keys[0] = smallest;
             node->keyCount = 1;
             
             Node23* sibling = new Node23();
-            sibling->keys[0] = tempKeys[2];
+            sibling->keys[0] = largest;
             sibling->keyCount = 1;
             
             res.isSplit = true;
-            res.promotedKey = tempKeys[1];
+            res.promotedKey = middle;
             res.rightNode = sibling;
         }
         return res;
@@ -84,10 +93,20 @@ TwoThreeTree::SplitResult TwoThreeTree::insertHelper(Node23* node, Task task) {
             }
             res.isSplit = false;
         } else {
-            Task tempKeys[3];
-            tempKeys[0] = node->keys[0];
-            tempKeys[1] = node->keys[1];
-            tempKeys[2] = childRes.promotedKey;
+            Task smallest, middle, largest;
+            if (childRes.promotedKey.taskID < node->keys[0].taskID) {
+                smallest = childRes.promotedKey;
+                middle = node->keys[0];
+                largest = node->keys[1];
+            } else if (childRes.promotedKey.taskID < node->keys[1].taskID) {
+                smallest = node->keys[0];
+                middle = childRes.promotedKey;
+                largest = node->keys[1];
+            } else {
+                smallest = node->keys[0];
+                middle = node->keys[1];
+                largest = childRes.promotedKey;
+            }
             
             Node23* tempChildren[4];
             tempChildren[0] = node->children[0];
@@ -101,29 +120,28 @@ TwoThreeTree::SplitResult TwoThreeTree::insertHelper(Node23* node, Task task) {
             
             for (int i = 3; i > insertPos + 1; i--) tempChildren[i] = tempChildren[i-1];
             tempChildren[insertPos + 1] = childRes.rightNode;
-            sortKeys(tempKeys, 3);
             
             if (enableLogging) {
                 int a = (node->keys[0].taskID < node->keys[1].taskID) ? node->keys[0].taskID : node->keys[1].taskID;
                 int b = (node->keys[0].taskID > node->keys[1].taskID) ? node->keys[0].taskID : node->keys[1].taskID;
                 cout << "23T SPLIT: Split node containing keys [" << a << "," << b << "]\n";
-                cout << "23T SPLIT: Promote key " << tempKeys[1].taskID << "\n";
+                cout << "23T SPLIT: Promote key " << middle.taskID << "\n";
             }
             
-            node->keys[0] = tempKeys[0];
+            node->keys[0] = smallest;
             node->keyCount = 1;
             node->children[0] = tempChildren[0];
             node->children[1] = tempChildren[1];
             node->children[2] = NULL;
             
             Node23* sibling = new Node23();
-            sibling->keys[0] = tempKeys[2];
+            sibling->keys[0] = largest;
             sibling->keyCount = 1;
             sibling->children[0] = tempChildren[2];
             sibling->children[1] = tempChildren[3];
             
             res.isSplit = true;
-            res.promotedKey = tempKeys[1];
+            res.promotedKey = middle;
             res.rightNode = sibling;
         }
     }
