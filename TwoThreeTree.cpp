@@ -1,11 +1,16 @@
 #include "TwoThreeTree.h"
 
-TwoThreeTree::TwoThreeTree() : root(nullptr), enableLogging(true) {}
+TwoThreeTree::TwoThreeTree() {
+    root = NULL;
+    enableLogging = true;
+}
 
-TwoThreeTree::~TwoThreeTree() { destroyTree(root); }
+TwoThreeTree::~TwoThreeTree() {
+    destroyTree(root);
+}
 
 void TwoThreeTree::destroyTree(Node23* node) {
-    if (node) {
+    if (node != NULL) {
         destroyTree(node->children[0]);
         destroyTree(node->children[1]);
         destroyTree(node->children[2]);
@@ -13,31 +18,36 @@ void TwoThreeTree::destroyTree(Node23* node) {
     }
 }
 
+// Manual swap sorting for 2-3 tree local arrays
 void TwoThreeTree::sortKeys(Task keys[], int count) {
     if (count == 2 && keys[0].taskID > keys[1].taskID) {
-        std::swap(keys[0], keys[1]);
+        Task temp = keys[0]; keys[0] = keys[1]; keys[1] = temp;
     } else if (count == 3) {
-        if (keys[0].taskID > keys[1].taskID) std::swap(keys[0], keys[1]);
-        if (keys[1].taskID > keys[2].taskID) std::swap(keys[1], keys[2]);
-        if (keys[0].taskID > keys[1].taskID) std::swap(keys[0], keys[1]);
+        if (keys[0].taskID > keys[1].taskID) { Task temp = keys[0]; keys[0] = keys[1]; keys[1] = temp; }
+        if (keys[1].taskID > keys[2].taskID) { Task temp = keys[1]; keys[1] = keys[2]; keys[2] = temp; }
+        if (keys[0].taskID > keys[1].taskID) { Task temp = keys[0]; keys[0] = keys[1]; keys[1] = temp; }
     }
 }
 
-TwoThreeTree::SplitResult TwoThreeTree::insertHelper(Node23* node, const Task& task) {
+TwoThreeTree::SplitResult TwoThreeTree::insertHelper(Node23* node, Task task) {
     SplitResult res;
     if (node->isLeaf()) {
         if (node->keyCount < 2) {
-            node->keys[node->keyCount++] = task;
+            node->keys[node->keyCount] = task;
+            node->keyCount++;
             sortKeys(node->keys, node->keyCount);
         } else {
-            Task tempKeys[3] = {node->keys[0], node->keys[1], task};
+            Task tempKeys[3];
+            tempKeys[0] = node->keys[0];
+            tempKeys[1] = node->keys[1];
+            tempKeys[2] = task;
             sortKeys(tempKeys, 3);
             
             if (enableLogging) {
-                int a = std::min(node->keys[0].taskID, node->keys[1].taskID);
-                int b = std::max(node->keys[0].taskID, node->keys[1].taskID);
-                std::cout << "23T SPLIT: Split node containing keys [" << a << "," << b << "]" << std::endl;
-                std::cout << "23T SPLIT: Promote key " << tempKeys[1].taskID << std::endl;
+                int a = (node->keys[0].taskID < node->keys[1].taskID) ? node->keys[0].taskID : node->keys[1].taskID;
+                int b = (node->keys[0].taskID > node->keys[1].taskID) ? node->keys[0].taskID : node->keys[1].taskID;
+                cout << "23T SPLIT: Split node containing keys [" << a << "," << b << "]\n";
+                cout << "23T SPLIT: Promote key " << tempKeys[1].taskID << "\n";
             }
             
             node->keys[0] = tempKeys[0];
@@ -75,28 +85,37 @@ TwoThreeTree::SplitResult TwoThreeTree::insertHelper(Node23* node, const Task& t
             }
             res.isSplit = false;
         } else {
-            Task tempKeys[3] = {node->keys[0], node->keys[1], childRes.promotedKey};
-            Node23* tempChildren[4] = {node->children[0], node->children[1], node->children[2], nullptr};
+            Task tempKeys[3];
+            tempKeys[0] = node->keys[0];
+            tempKeys[1] = node->keys[1];
+            tempKeys[2] = childRes.promotedKey;
             
-            int insertPos = (childRes.promotedKey.taskID < node->keys[0].taskID) ? 0 :
-                            (childRes.promotedKey.taskID < node->keys[1].taskID) ? 1 : 2;
+            Node23* tempChildren[4];
+            tempChildren[0] = node->children[0];
+            tempChildren[1] = node->children[1];
+            tempChildren[2] = node->children[2];
+            tempChildren[3] = NULL;
             
-            for (int i = 3; i > insertPos + 1; --i) tempChildren[i] = tempChildren[i-1];
+            int insertPos = 0;
+            if (childRes.promotedKey.taskID > node->keys[0].taskID) insertPos = 1;
+            if (childRes.promotedKey.taskID > node->keys[1].taskID) insertPos = 2;
+            
+            for (int i = 3; i > insertPos + 1; i--) tempChildren[i] = tempChildren[i-1];
             tempChildren[insertPos + 1] = childRes.rightNode;
             sortKeys(tempKeys, 3);
             
             if (enableLogging) {
-                int a = std::min(node->keys[0].taskID, node->keys[1].taskID);
-                int b = std::max(node->keys[0].taskID, node->keys[1].taskID);
-                std::cout << "23T SPLIT: Split node containing keys [" << a << "," << b << "]" << std::endl;
-                std::cout << "23T SPLIT: Promote key " << tempKeys[1].taskID << std::endl;
+                int a = (node->keys[0].taskID < node->keys[1].taskID) ? node->keys[0].taskID : node->keys[1].taskID;
+                int b = (node->keys[0].taskID > node->keys[1].taskID) ? node->keys[0].taskID : node->keys[1].taskID;
+                cout << "23T SPLIT: Split node containing keys [" << a << "," << b << "]\n";
+                cout << "23T SPLIT: Promote key " << tempKeys[1].taskID << "\n";
             }
             
             node->keys[0] = tempKeys[0];
             node->keyCount = 1;
             node->children[0] = tempChildren[0];
             node->children[1] = tempChildren[1];
-            node->children[2] = nullptr;
+            node->children[2] = NULL;
             
             Node23* sibling = new Node23();
             sibling->keys[0] = tempKeys[2];
@@ -112,8 +131,8 @@ TwoThreeTree::SplitResult TwoThreeTree::insertHelper(Node23* node, const Task& t
     return res;
 }
 
-void TwoThreeTree::insert(const Task& task) {
-    if (!root) {
+void TwoThreeTree::insert(Task task) {
+    if (root == NULL) {
         root = new Node23();
         root->keys[0] = task;
         root->keyCount = 1;
@@ -132,11 +151,11 @@ void TwoThreeTree::insert(const Task& task) {
 }
 
 Task* TwoThreeTree::searchHelper(Node23* node, int taskID) {
-    if (!node) return nullptr;
-    for (int i = 0; i < node->keyCount; ++i) {
+    if (node == NULL) return NULL;
+    for (int i = 0; i < node->keyCount; i++) {
         if (taskID == node->keys[i].taskID) return &(node->keys[i]);
     }
-    if (node->isLeaf()) return nullptr;
+    if (node->isLeaf()) return NULL;
     if (taskID < node->keys[0].taskID) return searchHelper(node->children[0], taskID);
     if (node->keyCount == 1 || taskID < node->keys[1].taskID) return searchHelper(node->children[1], taskID);
     return searchHelper(node->children[2], taskID);
@@ -145,38 +164,39 @@ Task* TwoThreeTree::searchHelper(Node23* node, int taskID) {
 Task* TwoThreeTree::search(int taskID) { return searchHelper(root, taskID); }
 
 void TwoThreeTree::inorderHelper(Node23* node) {
-    if (!node) return;
+    if (node == NULL) return;
     inorderHelper(node->children[0]);
-    std::cout << "TaskID: " << node->keys[0].taskID << std::endl;
+    cout << "TaskID: " << node->keys[0].taskID << "\n";
     inorderHelper(node->children[1]);
     if (node->keyCount == 2) {
-        std::cout << "TaskID: " << node->keys[1].taskID << std::endl;
+        cout << "TaskID: " << node->keys[1].taskID << "\n";
         inorderHelper(node->children[2]);
     }
 }
 
 void TwoThreeTree::inorderTraversal() {
-    std::cout << "\n=== 2-3 Tree Inorder Traversal ===" << std::endl;
+    cout << "\n=== 2-3 Tree Inorder Traversal ===\n";
     inorderHelper(root);
 }
 
 void TwoThreeTree::prettyPrintHelper(Node23* node, int indent) {
-    if (!node) return;
-    std::string spaces(indent, ' ');
-    std::cout << spaces << "[";
-    for(int i=0; i<node->keyCount; ++i) {
-        std::cout << node->keys[i].taskID << (i == 0 && node->keyCount > 1 ? ", " : "");
+    if (node == NULL) return;
+    for(int i=0; i<indent; i++) cout << " ";
+    cout << "[";
+    for(int i=0; i<node->keyCount; i++) {
+        cout << node->keys[i].taskID;
+        if(i == 0 && node->keyCount > 1) cout << ", ";
     }
-    std::cout << "]" << std::endl;
+    cout << "]\n";
     if (!node->isLeaf()) {
-        for(int i=0; i<=node->keyCount; ++i) {
+        for(int i=0; i<=node->keyCount; i++) {
             prettyPrintHelper(node->children[i], indent + 4);
         }
     }
 }
 
 void TwoThreeTree::prettyPrint() {
-    std::cout << "\n=== 2-3 Tree Structure ===" << std::endl;
+    cout << "\n=== 2-3 Tree Structure ===\n";
     prettyPrintHelper(root, 0);
 }
 

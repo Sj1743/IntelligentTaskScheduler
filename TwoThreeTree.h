@@ -2,8 +2,7 @@
 #define TWOTHREETREE_H
 
 #include "Task.h"
-#include <iostream>
-#include <algorithm>
+using namespace std;
 
 class TwoThreeTree {
 private:
@@ -11,10 +10,14 @@ private:
         Task keys[2];
         Node23* children[3];
         int keyCount;
-        Node23() : keyCount(0) {
-            children[0] = children[1] = children[2] = nullptr;
+        
+        Node23() {
+            keyCount = 0;
+            children[0] = NULL;
+            children[1] = NULL;
+            children[2] = NULL;
         }
-        bool isLeaf() const { return children[0] == nullptr; }
+        bool isLeaf() const { return children[0] == NULL; }
     };
     
     Node23* root;
@@ -24,10 +27,10 @@ private:
         Task promotedKey;
         Node23* rightNode;
         bool isSplit;
-        SplitResult() : rightNode(nullptr), isSplit(false) {}
+        SplitResult() { rightNode = NULL; isSplit = false; }
     };
 
-    SplitResult insertHelper(Node23* node, const Task& task);
+    SplitResult insertHelper(Node23* node, Task task);
     void sortKeys(Task keys[], int count);
     void inorderHelper(Node23* node);
     void prettyPrintHelper(Node23* node, int indent);
@@ -37,7 +40,7 @@ private:
 public:
     TwoThreeTree();
     ~TwoThreeTree();
-    void insert(const Task& task);
+    void insert(Task task);
     Task* search(int taskID);
     void inorderTraversal();
     void prettyPrint();

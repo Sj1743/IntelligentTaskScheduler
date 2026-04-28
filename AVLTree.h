@@ -2,8 +2,7 @@
 #define AVLTREE_H
 
 #include "Task.h"
-#include <iostream>
-#include <algorithm>
+using namespace std;
 
 class AVLTree {
 private:
@@ -13,30 +12,32 @@ private:
         AVLNode* right;
         int height;
         
-        AVLNode(const Task& t) : task(t), left(nullptr), right(nullptr), height(1) {}
+        AVLNode(Task t) {
+            task = t;
+            left = NULL;
+            right = NULL;
+            height = 1;
+        }
     };
     
     AVLNode* root;
     bool enableLogging;
     
-    // Helper functions
     int getHeight(AVLNode* node);
     int getBalance(AVLNode* node);
+    int maxVal(int a, int b);
     void updateHeight(AVLNode* node);
     
-    // Rotation functions
     AVLNode* leftRotate(AVLNode* z);
     AVLNode* rightRotate(AVLNode* z);
     AVLNode* leftRightRotate(AVLNode* z);
     AVLNode* rightLeftRotate(AVLNode* z);
     
-    // Insert/Delete/Search helpers
-    AVLNode* insertHelper(AVLNode* node, const Task& task);
+    AVLNode* insertHelper(AVLNode* node, Task task);
     AVLNode* deleteHelper(AVLNode* node, int taskID);
     AVLNode* findMin(AVLNode* node);
     AVLNode* searchHelper(AVLNode* node, int taskID);
     
-    // Traversal helpers
     void inorderHelper(AVLNode* node);
     void prettyPrintHelper(AVLNode* node, int indent);
     void destroyTree(AVLNode* node);
@@ -45,7 +46,7 @@ public:
     AVLTree();
     ~AVLTree();
     
-    void insert(const Task& task);
+    void insert(Task task);
     bool deleteTask(int taskID);
     Task* search(int taskID);
     void inorderTraversal();

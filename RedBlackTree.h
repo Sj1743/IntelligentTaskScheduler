@@ -2,7 +2,7 @@
 #define REDBLACKTREE_H
 
 #include "Task.h"
-#include <iostream>
+using namespace std;
 
 class RedBlackTree {
 private:
@@ -15,22 +15,23 @@ private:
         RBNode* parent;
         Color color;
         
-        RBNode(const Task& t) 
-            : task(t), left(nullptr), right(nullptr), parent(nullptr), color(RED) {}
+        RBNode(Task t) {
+            task = t;
+            left = NULL;
+            right = NULL;
+            parent = NULL;
+            color = RED;
+        }
     };
     
     RBNode* root;
-    RBNode* NIL; // Sentinel node
+    RBNode* NIL;
     bool enableLogging;
     
-    // Helper functions
     void leftRotate(RBNode* x);
     void rightRotate(RBNode* x);
     void insertFixup(RBNode* z);
-    RBNode* insertHelper(RBNode* root, RBNode* node);
     RBNode* searchHelper(RBNode* node, int taskID);
-    
-    // Traversal helpers
     void inorderHelper(RBNode* node);
     void prettyPrintHelper(RBNode* node, int indent);
     void destroyTree(RBNode* node);
@@ -39,7 +40,7 @@ public:
     RedBlackTree();
     ~RedBlackTree();
     
-    void insert(const Task& task);
+    void insert(Task task);
     Task* search(int taskID);
     void inorderTraversal();
     void prettyPrint();

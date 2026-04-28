@@ -3,45 +3,50 @@
 
 #include <string>
 #include <iostream>
+using namespace std;
 
 struct Task {
     int taskID;
-    std::string description;
+    string description;
     int priority;
     int deadline;
     
-    // Default constructor
-    Task() : taskID(0), description(""), priority(0), deadline(0) {}
+    // Old-school constructor
+    Task() {
+        taskID = 0;
+        description = "";
+        priority = 0;
+        deadline = 0;
+    }
     
-    // Parameterized constructor
-    Task(int id, const std::string& desc, int prio, int dead)
-        : taskID(id), description(desc), priority(prio), deadline(dead) {}
+    // Old-school parameterized constructor
+    Task(int id, string desc, int prio, int dead) {
+        taskID = id;
+        description = desc;
+        priority = prio;
+        deadline = dead;
+    }
     
-    // For printing
     void print() const {
-        std::cout << "TaskID: " << taskID 
-                  << ", Priority: " << priority 
-                  << ", Deadline: " << deadline 
-                  << ", Desc: " << description << std::endl;
+        cout << "TaskID: " << taskID 
+             << ", Priority: " << priority 
+             << ", Deadline: " << deadline 
+             << ", Desc: " << description << "\n";
     }
 };
 
-// Comparison function for heap (priority first, then deadline, then taskID)
+// Priority -> Deadline -> TaskID
 inline bool heapCompare(const Task& a, const Task& b) {
-    if (a.priority != b.priority)
-        return a.priority > b.priority; // higher priority first
-    if (a.deadline != b.deadline)
-        return a.deadline < b.deadline; // smaller deadline first
-    return a.taskID < b.taskID; // smaller taskID first
+    if (a.priority != b.priority) return a.priority > b.priority;
+    if (a.deadline != b.deadline) return a.deadline < b.deadline;
+    return a.taskID < b.taskID;
 }
 
-// Comparison function for sorting (deadline first, then priority, then taskID)
+// Deadline -> Priority -> TaskID
 inline bool sortCompare(const Task& a, const Task& b) {
-    if (a.deadline != b.deadline)
-        return a.deadline < b.deadline; // smaller deadline first
-    if (a.priority != b.priority)
-        return a.priority > b.priority; // higher priority first
-    return a.taskID < b.taskID; // smaller taskID first
+    if (a.deadline != b.deadline) return a.deadline < b.deadline;
+    if (a.priority != b.priority) return a.priority > b.priority;
+    return a.taskID < b.taskID;
 }
 
 #endif

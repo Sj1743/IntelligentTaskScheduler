@@ -2,23 +2,25 @@
 #define MAXHEAP_H
 
 #include "Task.h"
-#include <vector>
-#include <iostream>
+using namespace std;
 
 class MaxHeap {
 private:
-    std::vector<Task> heap;
+    Task* heap; // Changed from Task heap[20000]
+    int heapSize;
     bool enableLogging;
     
+    void swapTasks(int i, int j);
     void heapifyDown(int i);
     void heapifyUp(int i);
 
 public:
-    MaxHeap() : enableLogging(true) {}
-    void insert(const Task& task);
+    MaxHeap();
+    ~MaxHeap(); // Added destructor
+    void insert(Task task);
     Task extractMax();
     Task peekMax() const;
-    void buildHeap(const std::vector<Task>& tasks);
+    void buildHeap(Task arr[], int n);
     bool isEmpty() const;
     void setLogging(bool enable);
 };
