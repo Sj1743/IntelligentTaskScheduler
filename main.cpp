@@ -45,7 +45,7 @@ void runPerformanceBenchmark(AVLTree& avl, RedBlackTree& rbt, TwoThreeTree& tt) 
     
     srand(2026);
 
-    Task* randomTasks = new Task[10000]; // Safe allocation
+    Task* randomTasks = new Task[10000];
 
     for (int i = 0; i < 10000; i++) {
         int id = rand() % 1000000 + 1; 
@@ -75,8 +75,7 @@ void runPerformanceBenchmark(AVLTree& avl, RedBlackTree& rbt, TwoThreeTree& tt) 
     rbt.setLogging(true);
     tt.setLogging(true);
 
-    delete[] randomTasks; // Safe deletion
-}
+    delete[] randomTasks;
 
 int main() {
     AVLTree avl;
@@ -84,7 +83,7 @@ int main() {
     TwoThreeTree tt;
     MaxHeap heap;
     
-    Task* masterList = new Task[20000]; // Safe allocation
+    Task* masterList = new Task[20000]; 
     int masterCount = 0;
 
     int choice;
@@ -139,6 +138,6 @@ int main() {
 
     } while (choice != 9);
 
-    delete[] masterList; // Safe deletion
+    delete[] masterList;
     return 0;
 }

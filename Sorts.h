@@ -53,7 +53,7 @@ private:
 
 public:
     static void insertionSort(Task originalArr[], int n) {
-        Task* arr = new Task[20000]; // Safe allocation
+        Task* arr = new Task[20000];
         copyArray(originalArr, arr, n);
         
         for (int i = 1; i < n; i++) {
@@ -67,22 +67,22 @@ public:
         }
         cout << "--- Insertion Sort Results ---\n";
         for (int i = 0; i < n; i++) arr[i].print();
-        delete[] arr; // Safe deletion
+        delete[] arr;
     }
 
     static void quickSort(Task originalArr[], int n) {
-        Task* arr = new Task[20000]; // Safe allocation
+        Task* arr = new Task[20000];
         copyArray(originalArr, arr, n);
         
         quickSortHelper(arr, 0, n - 1);
         
         cout << "--- Quick Sort Results ---\n";
         for (int i = 0; i < n; i++) arr[i].print();
-        delete[] arr; // Safe deletion
+        delete[] arr; 
     }
 
     static void heapSort(Task originalArr[], int n) {
-        Task* arr = new Task[20000]; // Safe allocation
+        Task* arr = new Task[20000];
         copyArray(originalArr, arr, n);
         
         for (int i = n / 2 - 1; i >= 0; i--) heapify(arr, n, i);
@@ -92,7 +92,7 @@ public:
         }
         cout << "--- Heap Sort Results ---\n";
         for (int i = 0; i < n; i++) arr[i].print();
-        delete[] arr; // Safe deletion
+        delete[] arr;
     }
 };
 
