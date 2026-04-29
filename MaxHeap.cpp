@@ -26,7 +26,9 @@ void MaxHeap::heapifyUp(int i) {
             }
             swapTasks(i, parent);
             i = parent;
-        } else break;
+        } else {
+            break;
+        }
     }
 }
 
@@ -42,7 +44,6 @@ void MaxHeap::heapifyDown(int i) {
         if (right < heapSize && heapCompare(heap[right], heap[largest])) {
             largest = right;
         }
-
         if (largest != i) {
             if (enableLogging) {
                 cout << "HEAPIFY: swap index " << i << " and " << largest 
@@ -50,41 +51,57 @@ void MaxHeap::heapifyDown(int i) {
             }
             swapTasks(i, largest);
             i = largest;
-        } else break;
+        } else {
+            break;
+        }
     }
 }
 
 void MaxHeap::insert(Task task) {
-    if (heapSize >= 20000) return;
+    if (heapSize >= 20000) {
+        return;
+    }
     heap[heapSize] = task;
     heapifyUp(heapSize);
     heapSize++;
 }
 
 Task MaxHeap::extractMax() {
-    if (heapSize == 0) return Task();
+    if (heapSize == 0) {
+        return Task();
+    }
     Task maxTask = heap[0];
     if (enableLogging) {
         cout << "EXTRACT MAX: " << maxTask.taskID << "\n";
     }
     heap[0] = heap[heapSize - 1];
     heapSize--;
-    if (heapSize > 0) heapifyDown(0);
+    if (heapSize > 0) {
+        heapifyDown(0);
+    }
     return maxTask;
 }
 
 Task MaxHeap::peekMax() const {
-    if (heapSize > 0) return heap[0];
+    if (heapSize > 0) {
+        return heap[0];
+    }
     return Task();
 }
 
 void MaxHeap::buildHeap(Task arr[], int n) {
-    for(int i = 0; i < n; i++) heap[i] = arr[i];
+    for(int i = 0; i < n; i++) {
+        heap[i] = arr[i];
+    }
     heapSize = n;
     for (int i = (heapSize / 2) - 1; i >= 0; i--) {
         heapifyDown(i);
     }
 }
 
-bool MaxHeap::isEmpty() const { return heapSize == 0; }
-void MaxHeap::setLogging(bool enable) { enableLogging = enable; }
+bool MaxHeap::isEmpty() const { 
+    return heapSize == 0; 
+}
+void MaxHeap::setLogging(bool enable) { 
+    enableLogging = enable; 
+}

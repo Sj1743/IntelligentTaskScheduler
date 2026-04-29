@@ -1,6 +1,5 @@
 #ifndef MAXHEAP_H
 #define MAXHEAP_H
-
 #include "Task.h"
 using namespace std;
 
@@ -9,7 +8,6 @@ private:
     Task* heap;
     int heapSize;
     bool enableLogging;
-    
     void swapTasks(int i, int j);
     void heapifyDown(int i);
     void heapifyUp(int i);

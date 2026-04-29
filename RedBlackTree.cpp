@@ -21,27 +21,43 @@ void RedBlackTree::destroyTree(RBNode* node) {
 }
 
 void RedBlackTree::leftRotate(RBNode* x) {
-    if (enableLogging) cout << "RBT FIXUP: RotateLeft(" << x->task.taskID << ")\n";
+    if (enableLogging) {
+        cout << "RBT FIXUP: RotateLeft(" << x->task.taskID << ")\n";
+    }
     RBNode* y = x->right;
     x->right = y->left;
-    if (y->left != NIL) y->left->parent = x;
+    if (y->left != NIL) {
+        y->left->parent = x;
+    }
     y->parent = x->parent;
-    if (x->parent == NULL) root = y;
-    else if (x == x->parent->left) x->parent->left = y;
-    else x->parent->right = y;
+    if (x->parent == NULL) {
+        root = y;
+    } else if (x == x->parent->left) {
+        x->parent->left = y;
+    } else {
+        x->parent->right = y;
+    }
     y->left = x;
     x->parent = y;
 }
 
 void RedBlackTree::rightRotate(RBNode* x) {
-    if (enableLogging) cout << "RBT FIXUP: RotateRight (" << x->task.taskID << ")\n";
+    if (enableLogging) {
+        cout << "RBT FIXUP: RotateRight (" << x->task.taskID << ")\n";
+    }
     RBNode* y = x->left;
     x->left = y->right;
-    if (y->right != NIL) y->right->parent = x;
+    if (y->right != NIL) {
+        y->right->parent = x;
+    }
     y->parent = x->parent;
-    if (x->parent == NULL) root = y;
-    else if (x == x->parent->right) x->parent->right = y;
-    else x->parent->left = y;
+    if (x->parent == NULL) {
+        root = y;
+    } else if (x == x->parent->right) {
+        x->parent->right = y;
+    } else {
+        x->parent->left = y;
+    }
     y->right = x;
     x->parent = y;
 }
@@ -91,15 +107,16 @@ void RedBlackTree::insert(Task task) {
     RBNode* z = new RBNode(task);
     z->left = NIL;
     z->right = NIL;
-    
     RBNode* y = NULL;
     RBNode* x = root;
     
     while (x != NIL) {
         y = x;
-        if (z->task.taskID < x->task.taskID) x = x->left;
-        else if (z->task.taskID > x->task.taskID) x = x->right;
-        else {
+        if (z->task.taskID < x->task.taskID) {
+            x = x->left;
+        } else if (z->task.taskID > x->task.taskID) {
+            x = x->right;
+        } else {
             x->task = task;
             delete z;
             return;
@@ -107,22 +124,32 @@ void RedBlackTree::insert(Task task) {
     }
     
     z->parent = y;
-    if (y == NULL) root = z;
-    else if (z->task.taskID < y->task.taskID) y->left = z;
-    else y->right = z;
+    if (y == NULL) {
+        root = z;
+    } else if (z->task.taskID < y->task.taskID) {
+        y->left = z;
+    } else {
+        y->right = z;
+    }
     
     insertFixup(z);
 }
 
 RedBlackTree::RBNode* RedBlackTree::searchHelper(RBNode* node, int taskID) {
-    if (node == NIL || node->task.taskID == taskID) return node;
-    if (taskID < node->task.taskID) return searchHelper(node->left, taskID);
+    if (node == NIL || node->task.taskID == taskID) {
+        return node;
+    }
+    if (taskID < node->task.taskID) {
+        return searchHelper(node->left, taskID);
+    }
     return searchHelper(node->right, taskID);
 }
 
 Task* RedBlackTree::search(int taskID) {
     RBNode* node = searchHelper(root, taskID);
-    if (node == NIL) return NULL;
+    if (node == NIL) {
+        return NULL;
+    }
     return &(node->task);
 }
 
@@ -144,7 +171,9 @@ void RedBlackTree::prettyPrintHelper(RBNode* node, int indent) {
     if (node != NIL) {
         prettyPrintHelper(node->right, indent + 4);
         string c = (node->color == RED) ? "R" : "B";
-        for (int i = 0; i < indent; i++) cout << " ";
+        for (int i = 0; i < indent; i++) {
+            cout << " ";
+        }
         cout << node->task.taskID << " (" << c << ")\n";
         prettyPrintHelper(node->left, indent + 4);
     }

@@ -7,12 +7,10 @@
 #include "TwoThreeTree.h"
 #include "MaxHeap.h"
 #include "Sorts.h"
-
 using namespace std;
 
 void runFixedTestSequence(AVLTree& avl, RedBlackTree& rbt, TwoThreeTree& tt, MaxHeap& heap, Task masterList[], int& masterCount) {
     cout << "\n=== RUNNING FIXED TEST SEQUENCE ===\n";
-    
     Task fixedTasks[7];
     fixedTasks[0] = Task(45, "Task45", 80, 5);
     fixedTasks[1] = Task(25, "Task25", 60, 10);
@@ -38,13 +36,10 @@ void runFixedTestSequence(AVLTree& avl, RedBlackTree& rbt, TwoThreeTree& tt, Max
 
 void runPerformanceBenchmark(AVLTree& avl, RedBlackTree& rbt, TwoThreeTree& tt) {
     cout << "\n=== RUNNING PERFORMANCE BENCHMARK (10,000 insertions) ===\n";
-    
     avl.setLogging(false);
     rbt.setLogging(false);
     tt.setLogging(false);
-    
     srand(2026);
-
     Task* randomTasks = new Task[10000];
 
     for (int i = 0; i < 10000; i++) {
@@ -53,17 +48,21 @@ void runPerformanceBenchmark(AVLTree& avl, RedBlackTree& rbt, TwoThreeTree& tt) 
     }
 
     auto startAVL = chrono::high_resolution_clock::now();
-    for (int i = 0; i < 10000; i++) avl.insert(randomTasks[i]);
+    for (int i = 0; i < 10000; i++) {
+        avl.insert(randomTasks[i]);
+    }
     auto endAVL = chrono::high_resolution_clock::now();
     auto durationAVL = chrono::duration_cast<chrono::milliseconds>(endAVL - startAVL).count();
-
     auto startRBT = chrono::high_resolution_clock::now();
-    for (int i = 0; i < 10000; i++) rbt.insert(randomTasks[i]);
+    for (int i = 0; i < 10000; i++) {
+        rbt.insert(randomTasks[i]);
+    }
     auto endRBT = chrono::high_resolution_clock::now();
     auto durationRBT = chrono::duration_cast<chrono::milliseconds>(endRBT - startRBT).count();
-
     auto startTT = chrono::high_resolution_clock::now();
-    for (int i = 0; i < 10000; i++) tt.insert(randomTasks[i]);
+    for (int i = 0; i < 10000; i++) {
+        tt.insert(randomTasks[i]);
+    }
     auto endTT = chrono::high_resolution_clock::now();
     auto durationTT = chrono::duration_cast<chrono::milliseconds>(endTT - startTT).count();
 
@@ -74,18 +73,16 @@ void runPerformanceBenchmark(AVLTree& avl, RedBlackTree& rbt, TwoThreeTree& tt) 
     avl.setLogging(true);
     rbt.setLogging(true);
     tt.setLogging(true);
-
     delete[] randomTasks;
+}
 
 int main() {
     AVLTree avl;
     RedBlackTree rbt;
     TwoThreeTree tt;
     MaxHeap heap;
-    
     Task* masterList = new Task[20000]; 
     int masterCount = 0;
-
     int choice;
     do {
         cout << "\n--- Intelligent Task Scheduler Menu ---\n";
@@ -109,7 +106,10 @@ int main() {
             cout << "Deadline: "; cin >> dead;
             cout << "Desc: "; cin >> desc;
             Task t(id, desc, prio, dead);
-            avl.insert(t); rbt.insert(t); tt.insert(t); heap.insert(t); 
+            avl.insert(t); 
+            rbt.insert(t); 
+            tt.insert(t); 
+            heap.insert(t); 
             masterList[masterCount] = t;
             masterCount++;
         } else if (choice == 2) {
@@ -120,8 +120,11 @@ int main() {
             int id;
             cout << "Enter ID to search: "; cin >> id;
             Task* t = avl.search(id);
-            if(t != NULL) t->print();
-            else cout << "Not found.\n";
+            if(t != NULL) {
+                t->print();
+            } else {
+                cout << "Not found.\n";
+            }
         } else if (choice == 4) {
             avl.prettyPrint(); rbt.prettyPrint(); tt.prettyPrint();
         } else if (choice == 5) {
@@ -135,7 +138,6 @@ int main() {
         } else if (choice == 8) {
             runPerformanceBenchmark(avl, rbt, tt);
         }
-
     } while (choice != 9);
 
     delete[] masterList;

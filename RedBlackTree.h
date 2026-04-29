@@ -1,25 +1,22 @@
 #ifndef REDBLACKTREE_H
 #define REDBLACKTREE_H
-
 #include "Task.h"
 using namespace std;
 
 class RedBlackTree {
 private:
     enum Color { RED, BLACK };
-    
     struct RBNode {
         Task task;
         RBNode* left;
         RBNode* right;
         RBNode* parent;
-        Color color;
-        
+        Color color; 
         RBNode(Task t) {
             task = t;
+            parent = NULL;
             left = NULL;
             right = NULL;
-            parent = NULL;
             color = RED;
         }
     };
@@ -27,7 +24,6 @@ private:
     RBNode* root;
     RBNode* NIL;
     bool enableLogging;
-    
     void leftRotate(RBNode* x);
     void rightRotate(RBNode* x);
     void insertFixup(RBNode* z);
@@ -39,9 +35,8 @@ private:
 public:
     RedBlackTree();
     ~RedBlackTree();
-    
-    void insert(Task task);
     Task* search(int taskID);
+    void insert(Task task);
     void inorderTraversal();
     void prettyPrint();
     void setLogging(bool enable);

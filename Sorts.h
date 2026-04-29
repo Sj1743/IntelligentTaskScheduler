@@ -1,6 +1,5 @@
 #ifndef SORTS_H
 #define SORTS_H
-
 #include "Task.h"
 using namespace std;
 
@@ -11,7 +10,6 @@ private:
         a = b;
         b = temp;
     }
-
     static int partition(Task arr[], int low, int high) {
         Task pivot = arr[high];
         int i = (low - 1);
@@ -46,7 +44,6 @@ private:
             heapify(arr, n, largest);
         }
     }
-
     static void copyArray(Task source[], Task dest[], int n) {
         for(int i = 0; i < n; i++) dest[i] = source[i];
     }
@@ -55,7 +52,6 @@ public:
     static void insertionSort(Task originalArr[], int n) {
         Task* arr = new Task[20000];
         copyArray(originalArr, arr, n);
-        
         for (int i = 1; i < n; i++) {
             Task key = arr[i];
             int j = i - 1;
@@ -73,9 +69,7 @@ public:
     static void quickSort(Task originalArr[], int n) {
         Task* arr = new Task[20000];
         copyArray(originalArr, arr, n);
-        
         quickSortHelper(arr, 0, n - 1);
-        
         cout << "--- Quick Sort Results ---\n";
         for (int i = 0; i < n; i++) arr[i].print();
         delete[] arr; 
@@ -84,8 +78,9 @@ public:
     static void heapSort(Task originalArr[], int n) {
         Task* arr = new Task[20000];
         copyArray(originalArr, arr, n);
-        
-        for (int i = n / 2 - 1; i >= 0; i--) heapify(arr, n, i);
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            heapify(arr, n, i);
+        }
         for (int i = n - 1; i > 0; i--) {
             swapTasks(arr[0], arr[i]);
             heapify(arr, i, 0);
